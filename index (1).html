@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BenzAI AI Predictor</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; background: #111; color: white; }
+        .container { margin-top: 50px; }
+        input, button { padding: 10px; margin: 10px; }
+        .result { font-size: 24px; margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>BenzAI AI Predictor</h2>
+        <input type="text" id="accessKey" placeholder="Enter Access Key">
+        <button onclick="validateKey()">Login</button>
+        <div id="predictionPage" style="display: none;">
+            <h3>Prediction:</h3>
+            <p id="prediction" class="result"></p>
+            <button onclick="getPrediction()">Get Prediction</button>
+        </div>
+    </div>
+
+    <script>
+        async function validateKey() {
+            const key = document.getElementById("accessKey").value;
+            const response = await fetch("http://localhost:3000/validate-key", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ key }),
+            });
+            const data = await response.json();
+            if (data.success) {
+                alert("Key Validated!");
+                document.getElementById("predictionPage").style.display = "block";
+            } else {
+                alert("Invalid Key!");
+            }
+        }
+
+        async function getPrediction() {
+            const response = await fetch("http://localhost:3000/predict");
+            const data = await response.json();
+            document.getElementById("prediction").innerText = data.prediction;
+        }
+    </script>
+
+</body></html>
